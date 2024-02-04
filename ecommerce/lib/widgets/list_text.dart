@@ -1,14 +1,14 @@
 import 'package:ecommerce/utils/dimensions.dart';
 import 'package:flutter/cupertino.dart';
 
-class BigText extends StatelessWidget {
+class ListText extends StatelessWidget {
   final String text; 
   Color? color; //this means we'll pass a color variable to this widget
   double size; 
   TextOverflow overFlow; 
 
   //constructor 
-  BigText({
+  ListText({
     Key? key, 
     required this.text,
     //to set default colors, you need to declare it as follows, 
@@ -28,7 +28,7 @@ class BigText extends StatelessWidget {
           color: color, 
           fontWeight: FontWeight.w400, 
           fontFamily: 'Roboto',
-          fontSize: size==0? Dimensions.font20:size, 
+          fontSize: size==0? Dimensions.font15:size, 
       ),
           
     );

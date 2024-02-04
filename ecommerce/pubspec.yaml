@@ -12,6 +12,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #Used mainly for routing and state management 
+  get: ^4.1.4
+  dots_indicator: ^2.1.1
 
   cupertino_icons: ^1.0.2
 
@@ -31,13 +34,13 @@ flutter:
   fonts:
      - family: Roboto
        fonts:
-        - asset: assets/font/Roboto-Regular.tff
+        - asset: assets/font/Roboto-Regular.ttf
           weight: 400
-        - asset: assets/font/Roboto-Medium.tff
+        - asset: assets/font/Roboto-Medium.ttf
           weight: 500
-        - asset: assets/font/Roboto-Bold.tff
+        - asset: assets/font/Roboto-Bold.ttf
           weight: 700
-        - asset: assets/font/Roboto-Black.tff
+        - asset: assets/font/Roboto-Black.ttf
           weight: 900  
   #   - family: Trajan Pro
   #     fonts:
