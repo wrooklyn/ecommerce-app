@@ -38,7 +38,6 @@ class _FoodPageBodyState extends State<FoodPageBody > {
     pageController.addListener(() {
       setState(() {
           _currPageValue=pageController.page!;
-          //print("current value is "+_currPageValue.toString());
       });
     });
   }
@@ -47,6 +46,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
   @override
   void dispose(){
     pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -119,7 +119,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
             itemBuilder: (context, index){
               return GestureDetector(
                 onTap:(){
-                  Get.toNamed(RouteHelper.getRecommendedFood(index));
+                  Get.toNamed(RouteHelper.getRecommendedFood(index, "home"));
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: Dimensions.width20, right: Dimensions.width20, bottom: Dimensions.height15),
@@ -255,66 +255,66 @@ class _FoodPageBodyState extends State<FoodPageBody > {
 
     return Transform(
       transform: matrix, 
-      child: Stack(
-          children:[
-            GestureDetector(
+      child: GestureDetector(
               onTap:(){
                 //in flutter, to move between pages, we can just call Get.to
 
-                Get.toNamed(RouteHelper.getPopularFood(position));
+                Get.toNamed(RouteHelper.getPopularFood(position, "home"));
               },
-              child:Container(
-                height:Dimensions.pageViewContainer, 
-                //even though we specified the height, it's not taking effect and the child container is taking up all the space of the parent container
-                //to deal with this problem, we can solve this by wrapping this container with a Stack widget
-                margin: EdgeInsets.only(left:Dimensions.width10, right:Dimensions.width10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimensions.radius30),
-                  color: position.isEven? const Color(0xFF69c5df) : const Color(0xFF9294cc),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                        "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${popularProduct.img!}"
-                      )
-                    )
-                ),
-              ),
-            ),
-            //we can wrap these widgets inside align widgets to tell each child where to stay (e.g. second container to come down)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child:  Container(
-                        height:Dimensions.pageViewTextContainer, 
-                        //even though we specified the height, it's not taking effect and the child container is taking up all the space of the parent container
-                        //to deal with this problem, we can solve this by wrapping this container with a Stack widget
-                        margin: EdgeInsets.only(left:Dimensions.width30, right:Dimensions.width30, bottom:Dimensions.height30),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.radius20),
-                          color: Colors.white, 
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xFFe8e8e8),
-                              blurRadius: 3.0, 
-                              offset: Offset(0,5)
-                            ),
-                            BoxShadow(
-                              color: Colors.white,
-                              offset: Offset(-5,0)
-                            ),
-                            BoxShadow(
-                              color: Colors.white,
-                              offset: Offset(5,0)
+              child: Stack(
+                children:[
+                  Container(
+                      height:Dimensions.pageViewContainer, 
+                      //even though we specified the height, it's not taking effect and the child container is taking up all the space of the parent container
+                      //to deal with this problem, we can solve this by wrapping this container with a Stack widget
+                      margin: EdgeInsets.only(left:Dimensions.width10, right:Dimensions.width10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(Dimensions.radius30),
+                        color: position.isEven? const Color(0xFF69c5df) : const Color(0xFF9294cc),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${popularProduct.img!}"
                             )
-                          ]
-                        ),
-                        child: Container( // we can use padding with containers
-                          padding: EdgeInsets.only(top:Dimensions.height15, left:Dimensions.width15, right:Dimensions.width15),
-                          child: FoodColumnDetail(text: popularProduct.name!)
-                        )
+                          )
                       ),
-            ),
-          ],
-        )
+                    ),
+                  //we can wrap these widgets inside align widgets to tell each child where to stay (e.g. second container to come down)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child:  Container(
+                              height:Dimensions.pageViewTextContainer, 
+                              //even though we specified the height, it's not taking effect and the child container is taking up all the space of the parent container
+                              //to deal with this problem, we can solve this by wrapping this container with a Stack widget
+                              margin: EdgeInsets.only(left:Dimensions.width30, right:Dimensions.width30, bottom:Dimensions.height30),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                color: Colors.white, 
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0xFFe8e8e8),
+                                    blurRadius: 3.0, 
+                                    offset: Offset(0,5)
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    offset: Offset(-5,0)
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    offset: Offset(5,0)
+                                  )
+                                ]
+                              ),
+                              child: Container( // we can use padding with containers
+                                padding: EdgeInsets.only(top:Dimensions.height15, left:Dimensions.width15, right:Dimensions.width15),
+                                child: FoodColumnDetail(text: popularProduct.name!)
+                              )
+                            ),
+                  ),
+                ],
+              )
+            )
       );
   }
 }

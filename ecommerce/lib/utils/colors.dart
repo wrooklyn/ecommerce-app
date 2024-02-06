@@ -2,7 +2,9 @@ import 'dart:ui';
 
 class AppColors{
   static final Color textColor = const Color(0xFFccc7c5);
-  static final Color mainColor = const Color(0xFF89dad0);
+  static final Color mainColor = const Color.fromRGBO(110, 181, 173, 1);
+  static final Color darkBlue = Color(0xFF619D96);
+
   //static final Color mainColor = const Color(0xFFfa7552);
   static final Color iconColor1 = Color.fromARGB(255, 239, 188, 112);
   static final Color iconColor2 = Color.fromARGB(255, 234, 142, 72);
