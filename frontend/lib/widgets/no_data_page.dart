@@ -1,0 +1,36 @@
+import 'package:ecommerce/utils/dimensions.dart';
+import 'package:flutter/material.dart';
+
+class NoDataPage extends StatelessWidget {
+
+  final String text; 
+  final String imgPath; 
+  
+  const NoDataPage({super.key, required this.text, this.imgPath="assets/image/empty_cart.png"});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Image.asset(
+            imgPath,
+            width:MediaQuery.of(context).size.width*0.22,
+            height:MediaQuery.of(context).size.height*0.22
+          ),
+          SizedBox(height: Dimensions.height15),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height*0.02,
+              color: Theme.of(context).disabledColor
+            ),
+            textAlign: TextAlign.center,
+          )
+        ],
+      )
+    );
+  }
+}

@@ -2,7 +2,6 @@ import 'package:ecommerce/pages/cart/cart.dart';
 import 'package:ecommerce/pages/food_details/popular_food_detail.dart';
 import 'package:ecommerce/pages/food_details/recommended_food_detail.dart';
 import 'package:ecommerce/pages/home/home_page.dart';
-import 'package:ecommerce/pages/home/main_food_page.dart';
 import 'package:ecommerce/pages/splash/splash_page.dart';
 import 'package:get/get.dart';
 
