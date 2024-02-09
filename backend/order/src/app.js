@@ -14,6 +14,8 @@ class App {
   async connectDB() {
     await mongoose.connect(config.mongoURI, {
       useNewUrlParser: true,
+      user: process.env.DB_USERNAME,
+      pass: process.env.DB_PASSWORD,
       useUnifiedTopology: true,
     });
     console.log("MongoDB connected");

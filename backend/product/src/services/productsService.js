@@ -1,4 +1,4 @@
-const ProductsRepository = require(".repositories/productsRepository");
+import ProductsRepository from ".repositories/productsRepository";
 
 /**
  * Class that ties together the business logic and the data access layer
@@ -9,6 +9,7 @@ class ProductsService {
   }
 
   async createProduct(product) {
+    //make checks 
     const createdProduct = await this.productsRepository.create(product);
     return createdProduct;
   }
@@ -24,4 +25,4 @@ class ProductsService {
   }
 }
 
-module.exports = ProductsService;
+export default ProductsService;

@@ -2,6 +2,8 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const App = require("../app");
 const expect = chai.expect;
+const fs = require('fs');
+
 require("dotenv").config();
 
 chai.use(chaiHttp);
@@ -36,22 +38,29 @@ describe("Products", () => {
         name: "Product 1",
         description: "Description of Product 1",
         price: 10,
+        location: "Location of Product 1",
+        category: "Category of Product 1",
       };
       const res = await chai
         .request(app.app)
         .post("/api/products")
         .set("Authorization", `Bearer ${authToken}`)
-        .send({
-            name: "Product 1",
-            price: 10,
-            description: "Description of Product 1"
-          });
+        .field({
+          name: "Product 1",
+          description: "Description of Product 1",
+          price: 10,
+          location: "Location of Product 1",
+          category: "Category of Product 1",
+        }).attach('img', fs.readFileSync(__dirname+'/testImages/testImage.png'), 'testImage.png');
 
       expect(res).to.have.status(201);
       expect(res.body).to.have.property("_id");
       expect(res.body).to.have.property("name", product.name);
       expect(res.body).to.have.property("description", product.description);
       expect(res.body).to.have.property("price", product.price);
+      expect(res.body).to.have.property("location", product.location);
+      expect(res.body).to.have.property("category", product.category);
+
     });
 
     it("should return an error if name is missing", async () => {

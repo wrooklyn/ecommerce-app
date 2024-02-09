@@ -20,9 +20,15 @@ class ProductController {
       if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
       }
-      const product = new Product(req.body);
+      
+      const product = new Product(
+        {
+          ...req.body,img:req.file.buffer
+        }
+      );
 
       const validationError = product.validateSync();
+
       if (validationError) {
         return res.status(400).json({ message: validationError.message });
       }

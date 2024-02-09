@@ -1,9 +1,14 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const config = require("./config");
 const MessageBroker = require("./utils/messageBroker");
 const productsRouter = require("./routes/productRoutes");
-require("dotenv").config();
+const multer = require('multer');
+
+const storage = config.storage;
+
+const upload=multer({storage});
 
 class App {
   constructor() {
@@ -21,6 +26,10 @@ class App {
       pass: process.env.DB_PASSWORD,
       useUnifiedTopology: true,
     });
+    let gfs; 
+    mongoose.connection.once('open', ()=>{
+      gfs=new mongoose.mongo.GridFSBucket(connect.db, {bucketName:"uploads"});
+    })
     console.log("MongoDB connected");
   }
 
@@ -32,6 +41,7 @@ class App {
   setMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(upload.single('img'));
   }
 
   setRoutes() {
