@@ -1,6 +1,10 @@
 const Product = require("../models/product");
 const messageBroker = require("../utils/messageBroker");
 const uuid = require('uuid');
+const ProductService = require("../services/productsService");
+const {validationResult} = require('express-validator');
+const mongoose = require("mongoose");
+const config = require("../config");
 
 /**
  * Class to hold the API implementation for the product services
@@ -11,33 +15,61 @@ class ProductController {
     this.createOrder = this.createOrder.bind(this);
     this.getOrderStatus = this.getOrderStatus.bind(this);
     this.ordersMap = new Map();
-
+    this.productService = new ProductService();
   }
 
-  async createProduct(req, res, next) {
+  async createProduct(req, res) {
     try {
       const token = req.headers.authorization;
       if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
       }
-      
-      const product = new Product(
-        {
-          ...req.body,img:req.file.buffer
-        }
-      );
-
-      const validationError = product.validateSync();
-
-      if (validationError) {
-        return res.status(400).json({ message: validationError.message });
+      const errors = validationResult(req)
+      if(errors.isEmpty()){
+        const result = await this.productService.createProduct(req);
+        res.status(201).json(result);
+      }else{
+        const url = config.mongoURI; 
+        const connect = mongoose.createConnection(url, {
+          useNewUrlParser: true,
+          useUnifiedTopology:true
+        });
+        let gfs; 
+        connect.once('open', ()=>{
+          gfs=new mongoose.mongo.GridFSBucket(connect.db, {bucketName: "images"});
+          gfs.delete(req.file.id);
+        })
+        res.status(422).json({errors: errors.array()})
       }
-
-      await product.save({ timeout: 30000 });
-
-      res.status(201).json(product);
     } catch (error) {
-      console.error(error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  async getAllProducts(req, res, next) {
+    try {
+      const token = req.headers.authorization;
+      if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const products = await this.productService.getAllProducts();
+      res.status(200).json(products);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  async getImageById(req, res, next){
+    try{
+      const token = req.headers.authorization;
+      if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      await this.productService.getImageById(req.params.filename, res);
+      
+      //res.status(200).json(image);
+    }catch(error){
+      console.log(error);
       res.status(500).json({ message: "Server error" });
     }
   }
@@ -101,20 +133,6 @@ class ProductController {
     return res.status(200).json(order);
   }
 
-  async getProducts(req, res, next) {
-    try {
-      const token = req.headers.authorization;
-      if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      const products = await Product.find({});
-
-      res.status(200).json(products);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Server error" });
-    }
-  }
 }
 
 module.exports = ProductController;

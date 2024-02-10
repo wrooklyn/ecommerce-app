@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
   createdAt: {type: String, required: false, default: Date.now().toString()},
   updatedAt: {type: String, required: false, default: ""},
   stars: {type: Number, required:false, default:-1},
-  img: {type: String, required: false}
+  img: {type: String, required: false, default:""}
 }, { collection : 'products' });
 
 const Product = mongoose.model("Product", productSchema);

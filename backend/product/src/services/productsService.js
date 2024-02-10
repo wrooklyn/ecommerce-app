@@ -1,4 +1,5 @@
-import ProductsRepository from ".repositories/productsRepository";
+const ProductsRepository = require("../repositories/productsRepository");
+const ErrorCodes = require("../utils/errorCodeConstants");
 
 /**
  * Class that ties together the business logic and the data access layer
@@ -9,9 +10,23 @@ class ProductsService {
   }
 
   async createProduct(product) {
-    //make checks 
-    const createdProduct = await this.productsRepository.create(product);
-    return createdProduct;
+    try{ 
+      const createdProduct = await this.productsRepository.createProduct(product);
+      return createdProduct;
+    }catch(error){
+      return error;
+    }
+  }
+ async getAllProducts() {
+    const products = await this.productsRepository.getAllProducts();
+    return products;
+  }
+
+  async getImageById(imageId, res) {
+    var image = await this.productsRepository.getImageById(imageId, res);
+    console.log("servizio");
+    console.log(image);
+    return image;
   }
 
   async getProductById(productId) {
@@ -19,10 +34,7 @@ class ProductsService {
     return product;
   }
 
-  async getProducts() {
-    const products = await this.productsRepository.findAll();
-    return products;
-  }
+ 
 }
 
-export default ProductsService;
+module.exports = ProductsService;

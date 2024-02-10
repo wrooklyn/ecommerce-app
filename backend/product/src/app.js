@@ -3,12 +3,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const config = require("./config");
 const MessageBroker = require("./utils/messageBroker");
-const productsRouter = require("./routes/productRoutes");
 const multer = require('multer');
-
+const ProductController = require("./controllers/productController");
+const isAuthenticated = require("./utils/isAuthenticated");
 const storage = config.storage;
-
 const upload=multer({storage});
+const {productValidator} = require('./utils/validators')
 
 class App {
   constructor() {
@@ -17,6 +17,8 @@ class App {
     this.setMiddlewares();
     this.setRoutes();
     this.setupMessageBroker();
+    this.productController = new ProductController();
+
   }
 
   async connectDB() {
@@ -26,10 +28,7 @@ class App {
       pass: process.env.DB_PASSWORD,
       useUnifiedTopology: true,
     });
-    let gfs; 
-    mongoose.connection.once('open', ()=>{
-      gfs=new mongoose.mongo.GridFSBucket(connect.db, {bucketName:"uploads"});
-    })
+    
     console.log("MongoDB connected");
   }
 
@@ -41,11 +40,17 @@ class App {
   setMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
-    this.app.use(upload.single('img'));
   }
 
   setRoutes() {
-    this.app.use("/api/products", productsRouter);
+    this.app.post("/api/products", isAuthenticated, upload.single('img'), productValidator, (req,res)=>this.productController.createProduct(req, res));
+    this.app.post("/api/buy", isAuthenticated, (req,res)=>this.productController.createProduct(req,res));
+    this.app.get("/api/products", isAuthenticated, (req, res)=>this.productController.getAllProducts(req,res)); 
+    this.app.get("/api/products/:filename", isAuthenticated, (req, res)=>this.productController.getImageById(req,res)); 
+    //this.app.get("/api/products/:productId", isAuthenticated, (req,res)=>this.productController.getProduct());
+    //this.app.get("/api/products/popular", isAuthenticated, (req,res)=>this.productController.getPopularProducts(req,res));
+    //this.app.get("/api/products/recommended", isAuthenticated, (req,res)=>this.productController.getRecommendedProducts(req,res));
+    //this.app.put("/api/products/:productId", isAuthenticated, (req,res)=>this.productController.updateProduct(req,res));
   }
 
   setupMessageBroker() {

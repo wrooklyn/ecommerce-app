@@ -1,26 +1,27 @@
 const Product = require("../models/product");
-
+const mongoose = require("mongoose");
+const config = require("../config");
 /**
  * Class that contains the business logic for the product repository interacting with the product model
  */
 
 class ProductsRepository {
   async createProduct(product) {
-    const product = new Product(
+
+    const newProduct = new Product(
       {
         ...product.body,img:product.file.id
       }
     );
 
-    const validationError = product.validateSync();
+    const validationError = newProduct.validateSync();
 
     if (validationError) {
       return res.status(400).json({ message: validationError.message });
     }
 
-    await product.save({ timeout: 50000 });
-//    const createdProduct = await Product.create(product);
-    return product.toObject();
+    newProduct.save({ timeout: 30000 });
+    return newProduct.toObject();
   }
 
   // async findById(productId) {
@@ -28,10 +29,28 @@ class ProductsRepository {
   //   return product;
   // }
 
-  // async findAll() {
-  //   const products = await Product.find().lean();
-  //   return products;
-  // }
+  async getAllProducts() {
+    const products = Product.find({});
+    return products;
+  }
+
+  async getImageById(imageId, res){
+      var image; 
+      const url = config.mongoURI; 
+      const connect = mongoose.createConnection(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology:true
+      });
+      let gfs; 
+      connect.once('open', async () => {
+        gfs = new mongoose.mongo.GridFSBucket(connect.db, { bucketName: "images" });
+        image = await gfs.find({ _id: new mongoose.Types.ObjectId(imageId) }).toArray();
+        if(image.length>0){
+          gfs.openDownloadStreamByName(image[0].filename).pipe(res);
+        }
+      });
+
+  }
 }
 
 module.exports = ProductsRepository;

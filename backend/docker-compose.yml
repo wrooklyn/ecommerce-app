@@ -17,8 +17,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
     # ports:
     #  - 27017:27017
-    volumes:
-      - ./auth/mongodb:/data/db
+    # volumes:
+    #   - ./auth/mongodb:/data/db
     networks: 
       - authnetwork
 
@@ -55,8 +55,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
     # ports:
     #  - 27018:27017
-    volumes:
-      - ./order/mongodb:/data/db
+    # volumes:
+    #   - ./order/mongodb:/data/db
     networks:
       - ordernetwork
 
@@ -81,8 +81,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
     ports:
       - 27019:27017
-    volumes:
-      - ./product/mongodb:/data/db
+    # volumes:
+    #   - ./product/mongodb:/data/db
     networks:
       - productnetwork
 

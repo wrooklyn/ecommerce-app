@@ -13,14 +13,16 @@ module.exports = {
     url: process.env.MONGODB_PRODUCT_URI,
     file: (req, file)=>{
       return new Promise((resolve, reject)=>{
+        const token = req.headers.authorization;
+        if (!token) {
+          return res.status(401).json({ message: "Unauthorized" });
+        }
         crypto.randomBytes(16, (err, buf)=>{
           if(err){
             return reject(err);
           }
           const filename=buf.toString('hex')+path.extname(file.originalname);
-          console.log(req.body);
           const fileInfo={
-            ...req.body,
             filename: filename,
             bucketName: 'images'
           };
