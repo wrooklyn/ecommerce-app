@@ -3,7 +3,7 @@
 import 'package:ecommerce/models/product_model.dart';
 
 class CartModel {
-  int? id;
+  String? id;
   String? name;
   int? price;
   String? img;
@@ -26,7 +26,7 @@ class CartModel {
     });
 
   CartModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['_id'];
     name = json['name'];
     price = json['price'];
     img = json['img'];
@@ -39,7 +39,7 @@ class CartModel {
 
   Map<String, dynamic> toJson(){
     return {
-      "id": id,
+      "_id": id,
       "name": name,
       "price": price,
       "img": img,

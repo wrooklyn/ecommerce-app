@@ -18,15 +18,40 @@ class ProductsService {
     }
   }
  async getAllProducts() {
+  try{
     const products = await this.productsRepository.getAllProducts();
     return products;
+  }catch(error){
+    return error; 
+  }
+    
   }
 
   async getImageById(imageId, res) {
-    var image = await this.productsRepository.getImageById(imageId, res);
-    console.log("servizio");
-    console.log(image);
-    return image;
+    try{
+      await this.productsRepository.getImageById(imageId, res);
+    }catch(error){
+      console.log(error);
+      res.status(500).json({message:"Server error"});
+    }
+  }
+
+  async getPopularProducts(){
+    try{
+      var products = await this.productsRepository.getPopularProducts();      
+      return {total_size: products.length, type_id: "popular", offset: 0, products: products}; 
+    }catch(error){
+      return error; 
+    }
+  }
+
+  async getRecommendedProducts(){
+    try{
+      var products = await this.productsRepository.getRecommendedProducts();
+      return {total_size: products.length, type_id: "recommended", offset: 0, products: products}; 
+    }catch(error){
+      return error; 
+    }
   }
 
   async getProductById(productId) {

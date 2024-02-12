@@ -1,8 +1,11 @@
+import 'package:ecommerce/controllers/popular_product_controller.dart';
+import 'package:ecommerce/controllers/recommended_product_controller.dart';
 import 'package:ecommerce/pages/home/food_page_body.dart';
 import 'package:ecommerce/utils/colors.dart';
 import 'package:ecommerce/utils/dimensions.dart';
 import 'package:ecommerce/widgets/big_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../widgets/small_text.dart';
 
@@ -14,13 +17,18 @@ class MainFoodPage extends StatefulWidget {
 }
 
 class _MainFoodPageState extends State<MainFoodPage> {
+  Future<void> _loadResource() async {
+    await Get.find<PopularProductController>().getPopularProductList();
+    await Get.find<RecommendedProductController>().getRecommendedProductList();
+  }
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: Column(
+    return RefreshIndicator(
+      onRefresh: _loadResource,
+      child: Column(
         children:[
           //header
+          // ignore: avoid_unnecessary_containers
           Container(
             //add scrolling parameter
             child: Container(
@@ -63,7 +71,7 @@ class _MainFoodPageState extends State<MainFoodPage> {
             child: FoodPageBody(),
           ))
         ]
-      )
+      ),
     );
   }
 }

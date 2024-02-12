@@ -153,7 +153,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                  "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${recommendedProduct.recommendedProductList[index].img!}"
+                                  "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${recommendedProduct.recommendedProductList[index].img!}",headers: AppConstants.HEADERS
                                 )
                             )
                           ),
@@ -228,6 +228,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
     );
   }
   Widget _buildPageItem(int position, ProductModel popularProduct){
+
     Matrix4 matrix = Matrix4.identity(); //it returns 3 coord (x,y,z)
     //we're gonna scale up/down our y axis
     if(position==_currPageValue.floor()){ //current page
@@ -274,7 +275,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${popularProduct.img!}"
+                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${popularProduct.img!}", headers: AppConstants.HEADERS
                             )
                           )
                       ),

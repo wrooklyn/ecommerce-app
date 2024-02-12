@@ -111,7 +111,7 @@ class CartPage extends StatelessWidget {
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: NetworkImage(
-                                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${controller.getCart[index].img!}"
+                                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${controller.getCart[index].img!}", headers: AppConstants.HEADERS
                                             )
                                         )
                                       ),

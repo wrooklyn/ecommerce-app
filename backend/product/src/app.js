@@ -46,10 +46,11 @@ class App {
     this.app.post("/api/products", isAuthenticated, upload.single('img'), productValidator, (req,res)=>this.productController.createProduct(req, res));
     this.app.post("/api/buy", isAuthenticated, (req,res)=>this.productController.createProduct(req,res));
     this.app.get("/api/products", isAuthenticated, (req, res)=>this.productController.getAllProducts(req,res)); 
-    this.app.get("/api/products/:filename", isAuthenticated, (req, res)=>this.productController.getImageById(req,res)); 
+    this.app.get("/api/products/popular", isAuthenticated, (req,res)=>this.productController.getPopularProducts(req,res));
+    this.app.get("/api/products/recommended", isAuthenticated, (req,res)=>this.productController.getRecommendedProducts(req,res));
+    this.app.get("/api/products/images/:filename", isAuthenticated, (req, res)=>this.productController.getImageById(req,res)); 
+    
     //this.app.get("/api/products/:productId", isAuthenticated, (req,res)=>this.productController.getProduct());
-    //this.app.get("/api/products/popular", isAuthenticated, (req,res)=>this.productController.getPopularProducts(req,res));
-    //this.app.get("/api/products/recommended", isAuthenticated, (req,res)=>this.productController.getRecommendedProducts(req,res));
     //this.app.put("/api/products/:productId", isAuthenticated, (req,res)=>this.productController.updateProduct(req,res));
   }
 

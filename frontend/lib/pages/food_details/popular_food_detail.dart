@@ -24,7 +24,7 @@ class PopularFoodDetail extends StatelessWidget {
     var productController = Get.find<PopularProductController>();
     var product=productController.popularProductList[pageId];
     productController.initProduct(product, Get.find<CartController>());
-
+    
     return Scaffold(
       body: Stack(
         children:[
@@ -38,7 +38,7 @@ class PopularFoodDetail extends StatelessWidget {
                 image: DecorationImage(
                   fit:BoxFit.cover,
                   image: NetworkImage(
-                    AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!
+                    AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!, headers: AppConstants.HEADERS
                   )
                 )
               )

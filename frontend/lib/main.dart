@@ -1,6 +1,8 @@
 import 'package:ecommerce/controllers/cart_controller.dart';
 import 'package:ecommerce/controllers/popular_product_controller.dart';
 import 'package:ecommerce/controllers/recommended_product_controller.dart';
+import 'package:ecommerce/pages/auth/signin_page.dart';
+import 'package:ecommerce/pages/auth/signup_page.dart';
 import 'package:ecommerce/pages/cart/cart.dart';
 import 'package:ecommerce/pages/home/main_food_page.dart';
 import 'package:ecommerce/routes/route_helper.dart';
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
+          home: SignInPage(),
           initialRoute: RouteHelper.getSplashScreen(),
           getPages: RouteHelper.routes,
         );

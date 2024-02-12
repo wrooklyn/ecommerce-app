@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+			"name": "iPhone 15 Pro Max",
+			"request": "launch",
+			"type": "dart",
+			"program": "lib/main.dart" 
+		},
+        {
+            "name": "Flutter",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart"
+        },
+        {
             "name": "ecommerce",
             "cwd": "ecommerce",
             "request": "launch",

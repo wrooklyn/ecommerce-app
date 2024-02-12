@@ -67,12 +67,43 @@ class ProductController {
       }
       await this.productService.getImageById(req.params.filename, res);
       
-      //res.status(200).json(image);
     }catch(error){
       console.log(error);
       res.status(500).json({ message: "Server error" });
     }
   }
+  
+  async getPopularProducts(req, res, next){
+    try{
+      const token = req.headers.authorization;
+      if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const products = await this.productService.getPopularProducts(); 
+      res.status(200).json(products);
+
+    }catch(error){
+      console.log(error);
+      res.status(500).json({message:"Server error"});
+    }
+  }
+
+  async getRecommendedProducts(req, res, next){
+    try{
+      console.log(req.headers);
+      const token = req.headers.authorization;
+      if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const products = await this.productService.getRecommendedProducts(); 
+      res.status(200).json(products);
+
+    }catch(error){
+      console.log(error);
+      res.status(500).json({message:"Server error"});
+    }
+  }
+
 
   async createOrder(req, res, next) {
     try {

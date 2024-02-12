@@ -93,7 +93,7 @@ class RecommendedFoodDetail extends StatelessWidget {
               )
             ),
             pinned: true,
-            backgroundColor: AppColors.yellowColor,
+            backgroundColor: Colors.white,
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.network(

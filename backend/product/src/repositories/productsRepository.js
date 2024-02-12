@@ -30,7 +30,7 @@ class ProductsRepository {
   // }
 
   async getAllProducts() {
-    const products = Product.find({});
+    const products = await Product.find({});
     return products;
   }
 
@@ -50,6 +50,28 @@ class ProductsRepository {
         }
       });
 
+  }
+
+  async getPopularProducts() {
+    try{
+      const products = await Product.find({category: "popular"});
+      return products;
+    }catch(error){
+      console.log(error);
+      return error;
+    }
+    
+  }
+
+  async getRecommendedProducts() {
+    try{
+      const products = await Product.find({category: "recommended"});
+      return products;
+    }catch(error){
+      console.log(error);
+      return error;
+    }
+    
   }
 }
 

@@ -20,7 +20,7 @@ class ApiClient extends GetConnect implements GetxService{
   //the response will be from the Getx package, instead of an http client, we'll have a Getx client
   Future<Response> getData(String uri,) async { //specify the endpoint - uri
     try{
-      Response res = await get(uri);
+      Response res = await get(uri, headers: _mainHeaders);
       return res; 
     }catch(e){
       return Response(statusCode:1, statusText: e.toString());
