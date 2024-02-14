@@ -70,8 +70,6 @@ class PopularProductController extends GetxController{
     }else{
       _inCartItems=_quantity;
     }
-    
-
   }
 
   void addItem(ProductModel p){

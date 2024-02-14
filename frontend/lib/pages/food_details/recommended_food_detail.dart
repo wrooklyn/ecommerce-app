@@ -1,6 +1,7 @@
 import 'package:ecommerce/controllers/cart_controller.dart';
 import 'package:ecommerce/controllers/popular_product_controller.dart';
 import 'package:ecommerce/controllers/recommended_product_controller.dart';
+import 'package:ecommerce/data/api/api.dart';
 import 'package:ecommerce/routes/route_helper.dart';
 import 'package:ecommerce/utils/app_constants.dart';
 import 'package:ecommerce/utils/colors.dart';
@@ -22,7 +23,9 @@ class RecommendedFoodDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     var product = Get.find<RecommendedProductController>().recommendedProductList[pageId];
     var productController = Get.find<PopularProductController>();
+    var apiClient = Get.find<ApiClient>();
     productController.initProduct(product, Get.find<CartController>());
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -35,11 +38,6 @@ class RecommendedFoodDetail extends StatelessWidget {
               children:[
                 GestureDetector(
                   onTap: (){
-                    // if(page=="cart"){
-                    //   Get.toNamed(RouteHelper.getCart());
-                    // }else{
-                    //   Get.toNamed(RouteHelper.getHomePage());
-                    // }
                     Get.back();
                   },
                   child: AppIcon(icon: Icons.arrow_back_ios, size: Dimensions.height35),
@@ -97,7 +95,8 @@ class RecommendedFoodDetail extends StatelessWidget {
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.network(
-                  AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!, 
+                  AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!,
+                  headers: apiClient.mainHeaders, 
                   width: double.maxFinite,
                   fit: BoxFit.cover
               ),

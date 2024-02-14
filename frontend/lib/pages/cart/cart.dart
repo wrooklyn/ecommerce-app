@@ -1,6 +1,8 @@
+import 'package:ecommerce/controllers/auth_controller.dart';
 import 'package:ecommerce/controllers/cart_controller.dart';
 import 'package:ecommerce/controllers/popular_product_controller.dart';
 import 'package:ecommerce/controllers/recommended_product_controller.dart';
+import 'package:ecommerce/data/api/api.dart';
 import 'package:ecommerce/routes/route_helper.dart';
 import 'package:ecommerce/utils/app_constants.dart';
 import 'package:ecommerce/utils/colors.dart';
@@ -16,7 +18,7 @@ import 'package:get/get.dart';
 class CartPage extends StatelessWidget {
   
   String prevPage="screen"; 
-
+  ApiClient apiClient=Get.find<ApiClient>();
   CartPage({super.key, required this.prevPage});
 
   @override
@@ -111,7 +113,8 @@ class CartPage extends StatelessWidget {
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: NetworkImage(
-                                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${controller.getCart[index].img!}", headers: AppConstants.HEADERS
+                                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${controller.getCart[index].img!}",
+                                              headers: apiClient.mainHeaders
                                             )
                                         )
                                       ),
@@ -244,8 +247,13 @@ class CartPage extends StatelessWidget {
                   )
                 ),
                 GestureDetector(
-                  onTap:(){
-                    controller.addToHistory();
+                  onTap:() async {
+                    bool res = await Get.find<AuthController>().userLoggedIn();
+                    if(res) {
+                      controller.addToHistory();
+                    }else{
+                      Get.toNamed(RouteHelper.getSignIn());
+                    }
                   },
                   child: Container(
                     width: double.maxFinite,

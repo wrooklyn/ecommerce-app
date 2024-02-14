@@ -3,6 +3,7 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:ecommerce/controllers/popular_product_controller.dart';
 import 'package:ecommerce/controllers/recommended_product_controller.dart';
+import 'package:ecommerce/data/api/api.dart';
 import 'package:ecommerce/models/product_model.dart';
 import 'package:ecommerce/routes/route_helper.dart';
 import 'package:ecommerce/utils/app_constants.dart';
@@ -30,7 +31,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
   var _currPageValue = 0.0; 
   final double _scaleFactor=0.8;
   final double _height = Dimensions.pageViewContainer;
-  
+  ApiClient apiClient = Get.find<ApiClient>();
   @override 
   void initState(){ //it is a method inside any stateful class, but in order to use it we need to override it 
     super.initState();
@@ -153,7 +154,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: NetworkImage(
-                                  "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${recommendedProduct.recommendedProductList[index].img!}",headers: AppConstants.HEADERS
+                                  "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${recommendedProduct.recommendedProductList[index].img!}",headers: apiClient.mainHeaders
                                 )
                             )
                           ),
@@ -275,7 +276,7 @@ class _FoodPageBodyState extends State<FoodPageBody > {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${popularProduct.img!}", headers: AppConstants.HEADERS
+                              "${AppConstants.BASE_URL}${AppConstants.UPLOAD_URL}${popularProduct.img!}", headers: apiClient.mainHeaders
                             )
                           )
                       ),

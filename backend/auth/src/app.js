@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const config = require("./config");
 const authMiddleware = require("./middlewares/authMiddleware");
 const AuthController = require("./controllers/authController");
+const {registerValidator, loginValidator, emailValidator} = require('./utils/validators')
 
 class App {
   constructor() {
@@ -32,9 +33,12 @@ class App {
   }
 
   setRoutes() {
-    this.app.post("/login", (req, res) => this.authController.login(req, res));
-    this.app.post("/register", (req, res) => this.authController.register(req, res));
+    this.app.get("/isLogged", (req, res)=>this.authController.isLogged(req,res));
+    this.app.post("/login", loginValidator, (req, res) => this.authController.login(req, res));
+    this.app.post("/register", registerValidator, (req, res) => this.authController.register(req, res));
     this.app.get("/dashboard", authMiddleware, (req, res) => res.json({ message: "Welcome to dashboard" }));
+    this.app.get("/confirm/:token", (req, res) => this.authController.confirmEmail(req, res));
+    this.app.post("/resend", emailValidator, (req, res) => this.authController.resendEmail(req, res));
   }
 
   start() {

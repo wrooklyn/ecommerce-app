@@ -34,20 +34,22 @@ class RouteHelper{
     GetPage(
       name: homePage, 
       page: (){
-        return const HomePage();
+        return HomePage();
       }
     ),
     GetPage(
       name: signIn, 
       page: (){
         return const SignInPage();
-      }
+      },
+      transition: Transition.fade
     ),
     GetPage(
       name: signUp, 
       page: (){
         return const SignUpPage();
-      }
+      },
+      transition: Transition.fade
     ),
     GetPage(
       name: popularFood, 

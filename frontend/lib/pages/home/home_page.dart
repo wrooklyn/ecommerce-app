@@ -1,13 +1,18 @@
 
+import 'package:ecommerce/controllers/auth_controller.dart';
+import 'package:ecommerce/pages/auth/signin_page.dart';
 import 'package:ecommerce/pages/auth/signup_page.dart';
 import 'package:ecommerce/pages/cart/cart.dart';
 import 'package:ecommerce/pages/home/main_food_page.dart';
 import 'package:ecommerce/pages/profile/profile_page.dart';
+import 'package:ecommerce/routes/route_helper.dart';
 import 'package:ecommerce/utils/colors.dart';
 import 'package:ecommerce/utils/dimensions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
+
   const HomePage({super.key});
 
   @override
@@ -16,15 +21,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex=0;
-
+  
   List pages=[
     const MainFoodPage(),
-    const SignUpPage(),
+    Container(child: Center(child: Text("My Orders"))),
     CartPage(prevPage:"screen",),
     const ProfilePage()
   ];
 
-  void onTapNav(int index){
+  Future<void> onTapNav(int index) async {
     setState(() {
       _selectedIndex=index;
     });

@@ -1,5 +1,6 @@
 import 'package:ecommerce/controllers/cart_controller.dart';
 import 'package:ecommerce/controllers/popular_product_controller.dart';
+import 'package:ecommerce/data/api/api.dart';
 import 'package:ecommerce/routes/route_helper.dart';
 import 'package:ecommerce/utils/app_constants.dart';
 import 'package:ecommerce/utils/colors.dart';
@@ -22,6 +23,7 @@ class PopularFoodDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var productController = Get.find<PopularProductController>();
+    var apiClient = Get.find<ApiClient>();
     var product=productController.popularProductList[pageId];
     productController.initProduct(product, Get.find<CartController>());
     
@@ -38,7 +40,7 @@ class PopularFoodDetail extends StatelessWidget {
                 image: DecorationImage(
                   fit:BoxFit.cover,
                   image: NetworkImage(
-                    AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!, headers: AppConstants.HEADERS
+                    AppConstants.BASE_URL+AppConstants.UPLOAD_URL+product.img!, headers: apiClient.mainHeaders
                   )
                 )
               )

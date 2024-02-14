@@ -6,15 +6,17 @@ class AppConstants{
   static const String GET_ALL_PRODUCTS="/products/api/products";
   static const String POPULAR_PRODUCT_URI="/products/api/products/popular";
   static const String RECOMMENDED_PRODUCT_URI="/products/api/products/recommended";
+  static const String LOGGED_IN_URI="/auth/isLogged";
   //static const String DRINKS_PRODUCT_URI="/products/api/products/drinks";
 
-  static const String TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YzkwYjUyNGRhZjU0MGU2MWUxYjZkNSIsImlhdCI6MTcwNzY3NDQ1OH0.CChWLSbE3CjGwNarDbALMV5gmDHkzhql0d6eBVhitcI";
+  static const String REGISTRATION_URI="/auth/register";
+  static const String LOGIN_URI="/auth/login";
+
+  static const String TOKEN="AuthToken";
+  static const String USER_EMAIL = "";
+  static const String USER_PASS = "";
   static const String UPLOAD_URL = "/products/api/products/images/";
 
   static const String CART_LIST="cart-list";
   static const String CART_HISTORY_LIST="cart-history-list";
-  static const Map<String, String> HEADERS={
-      'Content-type':'application/json; charset=UTF-8',
-      'Authorization': 'Bearer $TOKEN',
-    };
 }

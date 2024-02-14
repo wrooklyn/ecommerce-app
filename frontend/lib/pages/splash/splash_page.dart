@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ecommerce/controllers/auth_controller.dart';
 import 'package:ecommerce/controllers/popular_product_controller.dart';
 import 'package:ecommerce/controllers/recommended_product_controller.dart';
 import 'package:ecommerce/routes/route_helper.dart';
@@ -20,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   Future<void> _loadResource() async {
     await Get.find<PopularProductController>().getPopularProductList();
     await Get.find<RecommendedProductController>().getRecommendedProductList();
+    await Get.find<AuthController>().init();
   }
   @override
   void initState(){

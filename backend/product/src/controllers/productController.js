@@ -48,10 +48,6 @@ class ProductController {
 
   async getAllProducts(req, res, next) {
     try {
-      const token = req.headers.authorization;
-      if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
       const products = await this.productService.getAllProducts();
       res.status(200).json(products);
     } catch (error) {
@@ -61,10 +57,6 @@ class ProductController {
 
   async getImageById(req, res, next){
     try{
-      const token = req.headers.authorization;
-      if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
       await this.productService.getImageById(req.params.filename, res);
       
     }catch(error){
@@ -75,10 +67,6 @@ class ProductController {
   
   async getPopularProducts(req, res, next){
     try{
-      const token = req.headers.authorization;
-      if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
       const products = await this.productService.getPopularProducts(); 
       res.status(200).json(products);
 
@@ -90,11 +78,6 @@ class ProductController {
 
   async getRecommendedProducts(req, res, next){
     try{
-      console.log(req.headers);
-      const token = req.headers.authorization;
-      if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
       const products = await this.productService.getRecommendedProducts(); 
       res.status(200).json(products);
 
