@@ -6,8 +6,8 @@
   "scripts": {
     "test": "mocha --timeout 20000 --recursive --exclude '**/node_modules/**' '**/*.test.js' --exit"
   },
-  "repository":{
-    "type":"git",
+  "repository": {
+    "type": "git",
     "url": "git+https://github.com/wrooklyn/ecommerce-app.git"
   },
   "author": "",

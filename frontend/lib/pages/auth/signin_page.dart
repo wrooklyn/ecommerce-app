@@ -49,6 +49,17 @@ class SignInPage extends StatelessWidget {
 
     }
 
+    Future<void> loginWithGoogle(AuthController authController) async {
+        await authController.loginWithGoogle().then((status){
+          if(status.isSuccess){
+            Get.toNamed(RouteHelper.getHomePage());
+            showCustomSnackBar(status.message, isError: false, title: "Success");
+          }else{
+            showCustomSnackBar(status.message);
+          }
+        });
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: GetBuilder<AuthController>(builder: (authController){
@@ -158,10 +169,15 @@ class SignInPage extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                   ),
                   SizedBox(width: Dimensions.width15),
-                  CircleAvatar(
-                    radius: Dimensions.radius20,
-                    backgroundImage: const AssetImage("assets/image/g.png"),
-                    backgroundColor: Colors.transparent,
+                  GestureDetector(
+                    onTap: (){
+                      loginWithGoogle(authController);
+                    },
+                    child: CircleAvatar(
+                      radius: Dimensions.radius20,
+                      backgroundImage: const AssetImage("assets/image/g.png"),
+                      backgroundColor: Colors.transparent,
+                    )
                   )
                 ]
               )

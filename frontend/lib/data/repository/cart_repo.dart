@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:ecommerce/models/cart_model.dart';
 import 'package:ecommerce/utils/app_constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CartRepo{
-  final SharedPreferences sharedPreferences;
-  CartRepo({required this.sharedPreferences});
+  final FlutterSecureStorage secureStorage;
+  CartRepo({required this.secureStorage});
 
   List<String> _cart = [];
   List<String> _cartHistory=[];
 
-  void addToCartList(List<CartModel> cartList){
+  Future<void> addToCartList(List<CartModel> cartList) async {
     //sharedPreferences.remove(AppConstants.CART_LIST);
     //sharedPreferences.remove(AppConstants.CART_HISTORY_LIST);
     var time = DateTime.now().toString();
@@ -20,15 +20,16 @@ class CartRepo{
       element.time=time;
       _cart.add(jsonEncode(element));
     }
-    sharedPreferences.setStringList(AppConstants.CART_LIST, _cart);
+    await secureStorage.write(key:AppConstants.CART_LIST,value: jsonEncode(_cart));
   }
 
-  List<CartModel> getCartList(){
+  Future<List<CartModel>> getCartList() async {
     List<CartModel> cartList=[];
     List<String> stringList=[];
 
-    if(sharedPreferences.containsKey(AppConstants.CART_LIST)){
-      stringList= sharedPreferences.getStringList(AppConstants.CART_LIST)!;
+    if(await secureStorage.containsKey(key:AppConstants.CART_LIST)){
+      String? stringOfItems= await secureStorage.read(key:AppConstants.CART_LIST);
+      stringList=jsonDecode(stringOfItems!);
     }
 
     for(var element in stringList){
@@ -39,21 +40,23 @@ class CartRepo{
     return cartList;
   }
 
-  void addToCartHistory(){
-    if(sharedPreferences.containsKey(AppConstants.CART_HISTORY_LIST)){
-      _cartHistory=sharedPreferences.getStringList(AppConstants.CART_HISTORY_LIST)!;
+  void addToCartHistory()async{
+    if(await secureStorage.containsKey(key: AppConstants.CART_HISTORY_LIST)){
+      String? listOfItems=await secureStorage.read(key:AppConstants.CART_HISTORY_LIST);
+      _cartHistory=jsonDecode(listOfItems!);
     }
     for(int i=0; i<_cart.length; i++){
       _cartHistory.add(_cart[i]);
     }
     //removeCart();
-    sharedPreferences.setStringList(AppConstants.CART_HISTORY_LIST, _cartHistory);
+    await secureStorage.write(key:AppConstants.CART_HISTORY_LIST, value:jsonEncode(_cartHistory));
   }
   
-  List<CartModel> getCartHistoryList(){
-    if(sharedPreferences.containsKey(AppConstants.CART_HISTORY_LIST)){
+  Future<List<CartModel>> getCartHistoryList()async{
+    if(await secureStorage.containsKey(key:AppConstants.CART_HISTORY_LIST)){
       _cartHistory=[];
-      _cartHistory=sharedPreferences.getStringList(AppConstants.CART_HISTORY_LIST)!;
+      String? listOfItems=await secureStorage.read(key:AppConstants.CART_HISTORY_LIST);
+      _cartHistory=jsonDecode(listOfItems!);
     }
   
     List<CartModel> cartListhistory=[];
@@ -63,14 +66,14 @@ class CartRepo{
     return cartListhistory;
   }
 
-  void removeCart(){
+  void removeCart() async{
     _cart.clear();
-    sharedPreferences.remove(AppConstants.CART_LIST);
+    await secureStorage.delete(key: AppConstants.CART_LIST);
   }
 
-  void clearCartHistory(){
+  void clearCartHistory()async{
     removeCart();
     _cartHistory=[];
-    sharedPreferences.remove(AppConstants.CART_HISTORY_LIST);
+    await secureStorage.delete(key:AppConstants.CART_HISTORY_LIST);
   }
 }

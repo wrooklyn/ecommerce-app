@@ -33,7 +33,7 @@ services:
         - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
     networks:
         - ecommerce
-
+      
   order:
     build: ./order
     ports:
@@ -94,9 +94,26 @@ services:
       - RABBITMQ_URL=amqp://rabbitmq:5672
     networks:
       - ecommerce
+      - gatewaynetwork
+  
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./api_gateway/redis/root:/root/redis 
+      - ./api_gateway/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment: 
+      - REDIS_PASSWORD=redis-pass-key
+      - REDIS_PORT=6379
+      - REDIS_DATABASE=1
+    networks: 
+      - gatewaynetwork
+    
 
 networks:
   ecommerce:
   authnetwork:
   productnetwork:
   ordernetwork:
+  gatewaynetwork:

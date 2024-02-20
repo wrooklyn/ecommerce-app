@@ -2,9 +2,10 @@ import 'package:ecommerce/data/repository/auth_repo.dart';
 import 'package:ecommerce/models/response_model.dart';
 import 'package:ecommerce/models/signin_model.dart';
 import 'package:ecommerce/models/signup_model.dart';
-import 'package:ecommerce/utils/app_constants.dart';
+import 'package:ecommerce/models/thirdPartyAuth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController extends GetxController implements GetxService{
     final AuthRepo authRepo; 
@@ -16,7 +17,7 @@ class AuthController extends GetxController implements GetxService{
     bool get isLoginLoading=>_isLoginLoading;
     bool _isLogged = false; 
     bool get isLogged=>_isLogged;
-    
+
     Future<ResponseModel> registration(SignUpBody signUpBody) async {
       _isLoading=true; 
       update();
@@ -68,5 +69,41 @@ class AuthController extends GetxController implements GetxService{
     Future<void> init() async {
       _isLogged = await userLoggedIn(); 
       update();
+    }
+
+    Future<ResponseModel> loginWithGoogle() async{
+
+      late ResponseModel responseModel; 
+      try{
+        final GoogleSignInAccount? googleUser = await GoogleSignIn(
+          scopes: ['email', 'profile', 'https://www.googleapis.com/auth/user.phonenumbers.read']
+        ).signIn();
+
+        final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        if(credential.accessToken != null && credential.idToken!=null){
+          ThirdPartyAuthBody signInData = ThirdPartyAuthBody(email: googleUser.email, name: googleUser.displayName!, accessToken: credential.accessToken!, idToken: credential.idToken!);
+          Response res =await authRepo.loginWithGoogle(signInData);
+          if(res.statusCode==200){
+            responseModel=ResponseModel(true, "Welcome back!");
+            authRepo.saveUserToken(res.body["token"]);
+          }else{
+            responseModel=ResponseModel(false, res.body['message']!);
+          }
+          _isLoginLoading=false; 
+          _isLogged=true;
+          update();
+          return responseModel;
+        }else{
+          responseModel=ResponseModel(false, "Something went wrong.");
+        }
+        return responseModel;
+      }catch (e) {
+        print(e);
+        return responseModel=ResponseModel(false, "Something went wrong.");
+      }
     }
 }

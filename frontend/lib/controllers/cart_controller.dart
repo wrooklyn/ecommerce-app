@@ -99,8 +99,8 @@ class CartController extends GetxController{
     return total;
   }
 
-  List<CartModel> getCartData(){
-    setCart = cartRepo.getCartList();
+  Future<List<CartModel>> getCartData() async {
+    setCart = await cartRepo.getCartList();
     return _storageItems;
   }
 

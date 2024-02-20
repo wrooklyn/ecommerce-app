@@ -8,21 +8,19 @@ const UserSchema = new mongoose.Schema({
   },
   phone: {
     type: String, 
-    required: true,
+    required: false,
   },
   name: {
     type: String,
     required: true
   },
-  password: {
-    type: String,
-    required: true
-  },
+  hash: String, 
+  salt: String,
   isVerified:{
     type: Boolean,
     default: false
   },
-  
+  tokens:[{type: Object}]
 });
 
 module.exports = mongoose.model("User", UserSchema);

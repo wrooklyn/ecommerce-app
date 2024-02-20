@@ -28,8 +28,6 @@ class SignUpPage extends StatelessWidget {
 
       if(name.isEmpty){
         showCustomSnackBar("Name field is empty!", title: "Missing Field");
-      }else if(phone.isEmpty){
-        showCustomSnackBar("Phone field is empty!", title: "Missing Field");
       }else if(email.isEmpty){
         showCustomSnackBar("Email field is empty!", title: "Missing Field");
       }else if(!GetUtils.isEmail(email)){

@@ -1,19 +1,17 @@
-import 'package:ecommerce/utils/app_constants.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient extends GetConnect implements GetxService{
-  late String token; //when we talk to a server, we should have a token
+  String token="None"; //when we talk to a server, we should have a token
   final String appBaseUrl; //server url
   late Map<String, String> _mainHeaders; //storing data locally
   Map<String, String> get mainHeaders => _mainHeaders; 
-  final SharedPreferences sharedPreferences;
+  final FlutterSecureStorage secureStorage;
 
   //constructor
-  ApiClient({required this.sharedPreferences, required this.appBaseUrl}){
+  ApiClient({required this.secureStorage, required this.appBaseUrl}){
     baseUrl=appBaseUrl; //these variables come from Getx package management system
     timeout = const Duration(seconds:30);
-    token=sharedPreferences.getString(AppConstants.TOKEN)??"None";
     _mainHeaders={
       'Content-type':'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',

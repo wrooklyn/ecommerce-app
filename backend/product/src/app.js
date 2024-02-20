@@ -5,10 +5,12 @@ const config = require("./config");
 const MessageBroker = require("./utils/messageBroker");
 const multer = require('multer');
 const ProductController = require("./controllers/productController");
-const isAuthenticated = require("./utils/isAuthenticated");
 const storage = config.storage;
 const upload=multer({storage});
 const {productValidator} = require('./utils/validators')
+const {auth} = require('./middlewares/authMiddleware');
+const passport = require("passport");
+const {JWTstrategy}=require('./config/passport');
 
 class App {
   constructor() {
@@ -40,18 +42,20 @@ class App {
   setMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(passport.initialize());
+    passport.use('jwt', JWTstrategy);
   }
 
   setRoutes() {
-    this.app.post("/api/products", isAuthenticated, upload.single('img'), productValidator, (req,res)=>this.productController.createProduct(req, res));
-    this.app.post("/api/buy", isAuthenticated, (req,res)=>this.productController.createProduct(req,res));
+    this.app.post("/api/products", auth, upload.single('img'), productValidator, (req,res)=>this.productController.createProduct(req, res));
+    this.app.post("/api/buy", auth, (req,res)=>this.productController.createProduct(req,res));
     this.app.get("/api/products", (req, res)=>this.productController.getAllProducts(req,res)); 
     this.app.get("/api/products/popular", (req,res)=>this.productController.getPopularProducts(req,res));
     this.app.get("/api/products/recommended", (req,res)=>this.productController.getRecommendedProducts(req,res));
     this.app.get("/api/products/images/:filename", (req, res)=>this.productController.getImageById(req,res)); 
     
-    //this.app.get("/api/products/:productId", isAuthenticated, (req,res)=>this.productController.getProduct());
-    //this.app.put("/api/products/:productId", isAuthenticated, (req,res)=>this.productController.updateProduct(req,res));
+    //this.app.get("/api/products/:productId", auth, (req,res)=>this.productController.getProduct());
+    //this.app.put("/api/products/:productId", auth, (req,res)=>this.productController.updateProduct(req,res));
   }
 
   setupMessageBroker() {

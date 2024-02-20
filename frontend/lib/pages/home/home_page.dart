@@ -1,15 +1,10 @@
 
-import 'package:ecommerce/controllers/auth_controller.dart';
-import 'package:ecommerce/pages/auth/signin_page.dart';
-import 'package:ecommerce/pages/auth/signup_page.dart';
 import 'package:ecommerce/pages/cart/cart.dart';
 import 'package:ecommerce/pages/home/main_food_page.dart';
 import 'package:ecommerce/pages/profile/profile_page.dart';
-import 'package:ecommerce/routes/route_helper.dart';
 import 'package:ecommerce/utils/colors.dart';
 import 'package:ecommerce/utils/dimensions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
 

@@ -20,6 +20,15 @@ class UserRepository {
     }
   }
 
+  async registerWithGoogle(user){
+    try{
+      const newUser = await User.create({email:user.email, name:user.name, isVerified:true}); 
+      return newUser;
+    }catch(err){
+      return {success:false, msg: err};
+    }
+  }
+
   async getUserByEmail(email) {
     return await User.findOne({ email });
   }
@@ -38,6 +47,10 @@ class UserRepository {
 
   async updateUser(userId){
     return await User.updateOne({_id: userId}, {$set:{isVerified: true}});
+  }
+
+  async logout(newTokens, userId){
+    return await User.findByIdAndUpdate(userId, {tokens: newTokens});
   }
 }
 

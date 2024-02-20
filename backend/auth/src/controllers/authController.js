@@ -1,8 +1,10 @@
 const AuthService = require("../services/authService");
 const {validationResult} = require('express-validator');
-const {verifyEmail} = require("../utils/utils");
+const {verifyEmail, validPassword} = require("../utils/utils");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const {OAuth2Client} = require('google-auth-library');
+
 
 /**
  * Class to encapsulate the logic for the auth routes
@@ -13,26 +15,34 @@ class AuthController {
     this.authService = new AuthService();
   }
 
-  async isLogged(req, res){
-    const authHeader = req.headers.authorization;
-    console.log(req);
-    if (!authHeader) {
-      return res.status(401).json({ message: "Unauthorized" });
+  async loginWithGoogle(req, res){
+    try{
+      const expectedAudience = process.env.GOOGLE_AUTH_IOS_CLIENT_ID;
+      const issuers = ['https://accounts.google.com'];
+      const oAuth2Client = new OAuth2Client();
+      const user = req.body;
+      const idToken = user.idToken; 
+      const tokenVerification = await oAuth2Client.verifyIdToken({
+        idToken,
+        expectedAudience,
+        issuers
+      });
+      if (tokenVerification.payload['sub'] && tokenVerification.payload['email_verified']) {
+        //should check req.body email and name parameters with tokenVerification.payload[email] and [name] parameters
+        const result = await this.authService.loginWithGoogle(user);
+        
+        if (result.success) {
+          res.status(200).json({ token: result.token });
+        } else {
+          res.status(401).json({ message: result.message });
+        }
+      }
+    }catch(e){
+      res.status(400).json({ message: e.message });
     }
-
-    // Extract the token from the header
-    const token = authHeader.split(" ")[1];
-
-    try {
-      // Verify the token using the JWT library and the secret key
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decodedToken;
-      res.status(200).json({message: "Authorized"});
-    } catch (err) {
-      console.error(err);
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    
   }
+  
   async login(req, res) {
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -67,7 +77,7 @@ class AuthController {
           res.status(200).json(result.msg);
 
         }else{
-          throw new Error(result.msg);
+          res.status(400).json({ message: result.msg });
         }
       }
     } catch (err) {
@@ -122,6 +132,16 @@ class AuthController {
     }
   }
 
+  async logout(req,res){
+    const token = req.headers.authorization.split(' ')[1];
+    if(!token){
+      return res.status(401).json({message: "Unauthorized Access"});
+    }
+    const tokens = req.user.tokens;
+    const newTokens = tokens.filter(t=>!validPassword(token, t.hash, t.salt));
+    await this.authService.logout(newTokens, req.user._id);
+    res.status(200).json({success: true, message: "Logged out successfully!", sig: token.split('.')[2]});
+  }
 }
 
 module.exports = AuthController;

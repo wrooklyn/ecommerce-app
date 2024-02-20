@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const Order = require("./models/order");
 const amqp = require("amqplib");
 const config = require("./config");
+const passport = require("passport");
+const {JWTstrategy}=require('./config/passport');
+
 
 class App {
   constructor() {

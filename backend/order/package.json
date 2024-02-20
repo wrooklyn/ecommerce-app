@@ -18,7 +18,12 @@
     "jsonwebtoken": "^9.0.0",
     "mocha": "^10.2.0",
     "uuid": "^9.0.0",
-    "mongoose": "^7.0.0"
+    "mongoose": "^7.0.0",
+    "passport-jwt": "^4.0.1",
+    "passport-google-oauth2": "^0.2.0",
+    "passport": "^0.7.0",
+    "crypto": "^1.0.1",
+    "base64url": "^3.0.1"
   },
   "devDependencies": {
     "dotenv": "^16.0.3"
