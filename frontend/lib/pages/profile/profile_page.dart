@@ -98,7 +98,7 @@ class ProfilePage extends StatelessWidget {
                       recognizer: TapGestureRecognizer()..onTap=() async {
                         bool res = await Get.find<AuthController>().userLoggedIn();
                         if(res){
-                          Get.find<AuthController>().clearSharedData();
+                          Get.find<AuthController>().logout();
                           Get.find<CartController>().clear();
                           Get.find<CartController>().clearCartHistory();
                           /*

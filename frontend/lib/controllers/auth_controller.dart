@@ -18,6 +18,11 @@ class AuthController extends GetxController implements GetxService{
     bool _isLogged = false; 
     bool get isLogged=>_isLogged;
 
+    Future<void> init() async {
+      _isLogged = await userLoggedIn(); 
+      update();
+    }
+
     Future<ResponseModel> registration(SignUpBody signUpBody) async {
       _isLoading=true; 
       update();
@@ -52,25 +57,6 @@ class AuthController extends GetxController implements GetxService{
       return responseModel;
     }
 
-    Future<void> saveUserEmailAndPassword(String email, String password) async {
-       await authRepo.saveUserEmailAndPassword(email, password);
-    }
-
-    Future<bool> userLoggedIn() async {
-      return await authRepo.userLoggedIn();
-    }
-
-    void clearSharedData(){
-      authRepo.clearSharedData();
-      _isLogged=false;
-      update();
-    }
-
-    Future<void> init() async {
-      _isLogged = await userLoggedIn(); 
-      update();
-    }
-
     Future<ResponseModel> loginWithGoogle() async{
 
       late ResponseModel responseModel; 
@@ -85,6 +71,8 @@ class AuthController extends GetxController implements GetxService{
           idToken: googleAuth.idToken,
         );
         if(credential.accessToken != null && credential.idToken!=null){
+          //also sign in to firebase auth
+          await FirebaseAuth.instance.signInWithCredential(credential);
           ThirdPartyAuthBody signInData = ThirdPartyAuthBody(email: googleUser.email, name: googleUser.displayName!, accessToken: credential.accessToken!, idToken: credential.idToken!);
           Response res =await authRepo.loginWithGoogle(signInData);
           if(res.statusCode==200){
@@ -105,5 +93,20 @@ class AuthController extends GetxController implements GetxService{
         print(e);
         return responseModel=ResponseModel(false, "Something went wrong.");
       }
+    }
+
+    Future<void> saveUserEmailAndPassword(String email, String password) async {
+       await authRepo.saveUserEmailAndPassword(email, password);
+    }
+
+    Future<bool> userLoggedIn() async {
+      return await authRepo.userLoggedIn();
+    }
+
+    Future<void> logout() async {
+      await FirebaseAuth.instance.signOut();
+      authRepo.clearSharedData();
+      _isLogged=false;
+      update();
     }
 }
