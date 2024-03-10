@@ -67,14 +67,41 @@ const ROUTES=[
                 [`^/auth`]: '',
             },
         }
-    }
+    },
+    {
+        url: '/products/api/createProduct',
+        auth: true,
+        rateLimit: {
+            windowMs: 15 * 60 * 1000,
+            max: 5
+        },
+        proxy: {
+            target: "http://product:3001",
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/products`]: '',
+            },
+        }
+    },
+    {
+        url: '/products/api/products',
+        auth: false,
+        rateLimit: {
+            windowMs: 15 * 60 * 1000,
+            max: 5
+        },
+        proxy: {
+            target: "http://product:3001",
+            changeOrigin: true,
+            pathRewrite: {
+                [`^/products`]: '',
+            },
+        }
+    },
 ]
 
 module.exports = {ROUTES};
 
-// this.app.use("/products", (req, res)=>{
-//     proxy.web(req,res, {target:"http://product:3001"});
-// });
 
 // this.app.use("/orders", (req, res)=>{
 //     proxy.web(req, res, {target:"http://order:3002"});

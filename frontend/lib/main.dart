@@ -2,7 +2,9 @@ import 'package:ecommerce/controllers/cart_controller.dart';
 import 'package:ecommerce/controllers/popular_product_controller.dart';
 import 'package:ecommerce/controllers/recommended_product_controller.dart';
 import 'package:ecommerce/routes/route_helper.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
 import 'helper/dependencies.dart' as dep; 
@@ -11,6 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); //it will make sure dependencies are load correctly and wait until then
   await FlutterConfig.loadEnvVariables();
   await dep.init();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 

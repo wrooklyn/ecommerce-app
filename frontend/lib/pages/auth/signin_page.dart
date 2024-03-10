@@ -51,10 +51,10 @@ class SignInPage extends StatelessWidget {
 
     Future<void> loginWithGoogle(AuthController authController) async {
         await authController.loginWithGoogle().then((status){
-          if(status.isSuccess){
+          if(status!=null && status.isSuccess){
             Get.toNamed(RouteHelper.getHomePage());
             showCustomSnackBar(status.message, isError: false, title: "Success");
-          }else{
+          }else if(status!=null){
             showCustomSnackBar(status.message);
           }
         });

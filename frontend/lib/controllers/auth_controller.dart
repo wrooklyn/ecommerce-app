@@ -48,16 +48,16 @@ class AuthController extends GetxController implements GetxService{
       if(res.statusCode==200){
         responseModel=ResponseModel(true, "Welcome back!");
         authRepo.saveUserToken(res.body["token"]);
+        _isLogged=true;
       }else{
         responseModel=ResponseModel(false, res.body['message']!);
       }
       _isLoginLoading=false; 
-      _isLogged=true;
       update();
       return responseModel;
     }
 
-    Future<ResponseModel> loginWithGoogle() async{
+    Future<ResponseModel?> loginWithGoogle() async{
 
       late ResponseModel responseModel; 
       try{
@@ -65,12 +65,17 @@ class AuthController extends GetxController implements GetxService{
           scopes: ['email', 'profile', 'https://www.googleapis.com/auth/user.phonenumbers.read']
         ).signIn();
 
-        final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+        final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+        if(googleAuth==null){
+          return null; 
+        }
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-        if(credential.accessToken != null && credential.idToken!=null){
+
+        if(credential.accessToken != null && credential.idToken!=null && googleUser!=null){
           //also sign in to firebase auth
           await FirebaseAuth.instance.signInWithCredential(credential);
           ThirdPartyAuthBody signInData = ThirdPartyAuthBody(email: googleUser.email, name: googleUser.displayName!, accessToken: credential.accessToken!, idToken: credential.idToken!);
@@ -90,7 +95,6 @@ class AuthController extends GetxController implements GetxService{
         }
         return responseModel;
       }catch (e) {
-        print(e);
         return responseModel=ResponseModel(false, "Something went wrong.");
       }
     }
@@ -104,9 +108,16 @@ class AuthController extends GetxController implements GetxService{
     }
 
     Future<void> logout() async {
-      await FirebaseAuth.instance.signOut();
-      authRepo.clearSharedData();
-      _isLogged=false;
-      update();
+      try{
+        await FirebaseAuth.instance.signOut();
+        authRepo.clearSharedData();
+        _isLogged=false;
+        update();
+      }catch(e){
+        authRepo.clearSharedData();
+        _isLogged=false;
+        update();
+      }
+
     }
 }

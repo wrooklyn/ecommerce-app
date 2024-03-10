@@ -8,9 +8,6 @@ const ProductController = require("./controllers/productController");
 const storage = config.storage;
 const upload=multer({storage});
 const {productValidator} = require('./utils/validators')
-const {auth} = require('./middlewares/authMiddleware');
-const passport = require("passport");
-const {JWTstrategy}=require('./config/passport');
 
 class App {
   constructor() {
@@ -42,13 +39,11 @@ class App {
   setMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
-    this.app.use(passport.initialize());
-    passport.use('jwt', JWTstrategy);
   }
 
   setRoutes() {
-    this.app.post("/api/products", auth, upload.single('img'), productValidator, (req,res)=>this.productController.createProduct(req, res));
-    this.app.post("/api/buy", auth, (req,res)=>this.productController.createProduct(req,res));
+    this.app.post("/api/createProduct", upload.single('img'), productValidator, (req,res)=>this.productController.createProduct(req, res));
+    this.app.post("/api/buyProduct", (req,res)=>this.productController.createProduct(req,res));
     this.app.get("/api/products", (req, res)=>this.productController.getAllProducts(req,res)); 
     this.app.get("/api/products/popular", (req,res)=>this.productController.getPopularProducts(req,res));
     this.app.get("/api/products/recommended", (req,res)=>this.productController.getRecommendedProducts(req,res));

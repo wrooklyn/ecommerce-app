@@ -14,7 +14,8 @@ import 'package:get/get.dart';
 
 Future<void> init() async {
   //load dependencies
-  const FlutterSecureStorage storage = FlutterSecureStorage();  
+  const FlutterSecureStorage storage = FlutterSecureStorage(); 
+  
   Get.lazyPut(() => storage);
   //api client
 
