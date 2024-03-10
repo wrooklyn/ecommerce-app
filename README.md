@@ -228,7 +228,7 @@ The authentication service works as follows:
   * <b>Code</b>: `200 OK` 
   * <b>Content</b>:  
   ```json 
-  { "success": true, "message": "Logged out successfully!" }```
+  { "success": true, "message": "Logged out successfully!" }
 * <b>Error Response</b>: 
   * <b>Code</b>: `401 Unauthorized`
   * <b>Content</b>:  `"Unauthorized Access.`
